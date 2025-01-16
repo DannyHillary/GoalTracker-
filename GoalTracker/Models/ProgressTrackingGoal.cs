@@ -1,17 +1,25 @@
-﻿namespace GoalTracker.Models
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+
+namespace GoalTracker.Models
 {
     public class ProgressTrackingGoal : BaseGoal
     {
-        // Numeric goal target value
-        public decimal TargetValue { get; set; }
+        // Additional fields specific to Progress Goal
+       
+        public double TargetAmount { get; set; }  // Target value for progress
 
-        // Current achieved value
-        public decimal CurrentValue { get; set; }
+        public double CurrentAmount { get; set; }  // Current progress made
+
+        // Method to calculate the progress percentage
+        public double ProgressPercentage => (CurrentAmount / TargetAmount) * 100;
 
         // Navigation property for related ProgressLog entries
-        public List<ProgressLog> ProgressLogs { get; set; }
+        [ValidateNever]
+        public List<ProgressLog> ProgressLogs { get; set; } = new List<ProgressLog>();
     }
 }
+
 
 
 

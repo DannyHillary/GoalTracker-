@@ -1,6 +1,8 @@
 ﻿@model GoalTracker.Models.ProgressTrackingGoal
 
-<h2>Progress Goal Details</h2>
+<h2>Delete Progress Goal</h2>
+
+<p>Are you sure you want to delete the following goal?</p>
 
 <div class="form-group">
     <label>Title</label>
@@ -22,12 +24,8 @@
     <p>@Model.CurrentAmount</p>
 </div>
 
-<div class="form-group">
-    <label>Progress</label>
-    <p>@Model.ProgressPercentage %</p>
-</div>
-
-<a href="@Url.Action("Edit", "ProgressGoal", new { id = Model.Id })" class="btn btn-warning">Edit</a>
-<a href="@Url.Action("Delete", "ProgressGoal", new { id = Model.Id })" class="btn btn-danger">Delete</a>
-
-
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete Goal</button>
+    <a href="@Url.Action("Index", "ProgressGoal")" class="btn btn-secondary">Cancel</a>
+</form>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc;
 using GoalTracker.Models;
 using Microsoft.EntityFrameworkCore;
 

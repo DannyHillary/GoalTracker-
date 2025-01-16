@@ -1,0 +1,34 @@
+﻿@model IEnumerable<GoalTracker.Models.ProgressTrackingGoal>
+
+<h2>Progress Goals</h2>
+
+<a href="@Url.Action("Create", "ProgressGoal")" class="btn btn-primary">Create New Progress Goal</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Target Amount</th>
+            <th>Current Amount</th>
+            <th>Progress</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var goal in Model)
+        {
+            <tr>
+                <td>@goal.Title</td>
+                <td>@goal.TargetAmount</td>
+                <td>@goal.CurrentAmount</td>
+                <td>@goal.ProgressPercentage %</td>
+                <td>
+                    <a href="@Url.Action("Edit", "ProgressGoal", new { id = goal.Id })" class="btn btn-warning">Edit</a>
+                    <a href="@Url.Action("Details", "ProgressGoal", new { id = goal.Id })" class="btn btn-info">Details</a>
+                    <a href="@Url.Action("Delete", "ProgressGoal", new { id = goal.Id })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

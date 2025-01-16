@@ -151,6 +151,7 @@ C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\De
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\GoalTracker.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\GoalTracker.RazorAssemblyInfo.cache
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\GoalTracker.RazorAssemblyInfo.cs
+C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\GoalTracker.sourcelink.json
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\scopedcss\bundle\GoalTracker.styles.css
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\scopedcss\projectbundle\GoalTracker.bundle.scp.css
