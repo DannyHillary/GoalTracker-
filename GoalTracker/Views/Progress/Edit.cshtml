@@ -1,46 +1,68 @@
-﻿@model ProgressTrackingGoal
+﻿@model GoalTracker.Models.ProgressTrackingGoal
 
-<h2>Edit Progress Tracking Goal</h2>
+@{
+    ViewData["Title"] = "Edit Progress Goal";
+}
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
+<h2>@ViewData["Title"]</h2>
 
+<form asp-action="Edit" method="post">
     <div class="form-group">
-        <label asp-for="Title"></label>
+        <label asp-for="Title" class="control-label"></label>
         <input asp-for="Title" class="form-control" />
         <span asp-validation-for="Title" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
+        <label asp-for="Description" class="control-label"></label>
+        <input asp-for="Description" class="form-control" />
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="TargetAmount"></label>
-        <input asp-for="TargetAmount" class="form-control" />
-        <span asp-validation-for="TargetAmount" class="text-danger"></span>
+        <label asp-for="StartDate" class="control-label"></label>
+        <input asp-for="StartDate" class="form-control" type="date" />
+        <span asp-validation-for="StartDate" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="CurrentAmount"></label>
-        <input asp-for="CurrentAmount" class="form-control" />
-        <span asp-validation-for="CurrentAmount" class="text-danger"></span>
+        <label asp-for="EndDate" class="control-label"></label>
+        <input asp-for="EndDate" class="form-control" type="date" />
+        <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="GoalType"></label>
+        <label asp-for="GoalType" class="control-label"></label>
         <input asp-for="GoalType" class="form-control" />
         <span asp-validation-for="GoalType" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Status"></label>
+        <label asp-for="CurrentAmount" class="control-label"></label>
+        <input asp-for="CurrentAmount" class="form-control" />
+        <span asp-validation-for="CurrentAmount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TargetAmount" class="control-label"></label>
+        <input asp-for="TargetAmount" class="form-control" />
+        <span asp-validation-for="TargetAmount" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status" class="control-label"></label>
         <input asp-for="Status" class="form-control" />
         <span asp-validation-for="Status" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
+    <a href="@Url.Action("Index", "ProgressGoal")" class="btn btn-secondary">Cancel</a>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
 

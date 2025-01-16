@@ -2,6 +2,7 @@
 using GoalTracker.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System;
 
 namespace GoalTracker.Controllers
 {
@@ -26,7 +27,7 @@ namespace GoalTracker.Controllers
         // GET: ProgressGoal/Create
         public IActionResult Create()
         {
-            return View();
+            return View("~/Views/Progress/Create.cshtml");
         }
 
         // POST: ProgressGoal/Create
@@ -46,15 +47,18 @@ namespace GoalTracker.Controllers
         // GET: ProgressGoal/Edit/5
         public IActionResult Edit(int id)
         {
-            var goal = _context.ProgressTrackingGoals
-                                .Include(pg => pg.ProgressLogs)  // Ensure related ProgressLogs are included when editing
-                                .FirstOrDefault(pg => pg.Id == id);
-            if (goal == null)
+            var progressGoal = _context.ProgressTrackingGoals
+                                       .Include(pg => pg.ProgressLogs)  // Include ProgressLogs if needed
+                                       .FirstOrDefault(pg => pg.Id == id);
+
+            if (progressGoal == null)
             {
-                return NotFound();
+                return NotFound();  // If no goal found with that ID, return a 404 page
             }
-            return View(goal);
+
+            return View("~/Views/Progress/Edit.cshtml", progressGoal);  // Return the view with the existing goal
         }
+
 
         // POST: ProgressGoal/Edit/5
         [HttpPost]
@@ -63,67 +67,91 @@ namespace GoalTracker.Controllers
         {
             if (id != progressGoal.Id)
             {
-                return NotFound();
+                return NotFound();  // If the IDs don't match, return a 404 page
             }
 
             if (ModelState.IsValid)
             {
-                _context.Update(progressGoal);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _context.Update(progressGoal);  // Update the goal in the database
+                    _context.SaveChanges();  // Save the changes
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.ProgressTrackingGoals.Any(pg => pg.Id == id))
+                    {
+                        return NotFound();  // If the goal is not found in the database, return a 404 page
+                    }
+                    else
+                    {
+                        throw;  // Rethrow the exception if another error occurs
+                    }
+                }
+
+                return RedirectToAction(nameof(Index));  // Redirect back to the Index page after editing
             }
-            return View(progressGoal);
+
+            return View("Progress/Edit", progressGoal);  // Return the form again if validation fails
         }
+
+
 
         // GET: ProgressGoal/Details/5
         public IActionResult Details(int id)
         {
-            var goal = _context.ProgressTrackingGoals
-                                .Include(pg => pg.ProgressLogs)  // Include related ProgressLogs in the details view
-                                .FirstOrDefault(pg => pg.Id == id);
-            if (goal == null)
+            var progressGoal = _context.ProgressTrackingGoals
+                                       .Include(pg => pg.ProgressLogs)  // Include related logs
+                                       .FirstOrDefault(pg => pg.Id == id);
+
+            if (progressGoal == null)
             {
+                // Return a "Not Found" view or page if the goal does not exist
                 return NotFound();
             }
-            return View(goal);
+
+            // Ensure ProgressLogs is not null (initialize it if necessary)
+            progressGoal.ProgressLogs = progressGoal.ProgressLogs ?? new List<ProgressLog>();
+
+            // Explicitly specify the view location
+            return View("~/Views/Progress/Details.cshtml", progressGoal);
         }
+
 
         // GET: ProgressGoal/Delete/5
         public IActionResult Delete(int id)
         {
-            var goal = _context.ProgressTrackingGoals
-                                .Include(pg => pg.ProgressLogs)  // Ensure related logs are fetched before deleting
-                                .FirstOrDefault(pg => pg.Id == id);
-            if (goal == null)
+            var progressGoal = _context.ProgressTrackingGoals
+                                       .FirstOrDefault(pg => pg.Id == id);  // Fetch the goal by ID
+
+            if (progressGoal == null)
             {
-                return NotFound();
+                return NotFound();  // If the goal doesn't exist, return a 404 error
             }
-            return View(goal);
+
+            return View("~/Views/Progress/Delete.cshtml", progressGoal);  // Pass the goal to the Delete view
         }
+
 
         // POST: ProgressGoal/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var goal = _context.ProgressTrackingGoals
-                                .Include(pg => pg.ProgressLogs)  // Include related ProgressLogs before deleting
-                                .FirstOrDefault(pg => pg.Id == id);
+            var progressGoal = _context.ProgressTrackingGoals
+                                       .FirstOrDefault(pg => pg.Id == id);
 
-            if (goal != null)
+            if (progressGoal == null)
             {
-                // Optionally, delete the related ProgressLogs first
-                foreach (var log in goal.ProgressLogs)
-                {
-                    _context.ProgressLogs.Remove(log);  // Remove related ProgressLogs
-                }
-
-                _context.ProgressTrackingGoals.Remove(goal);  // Remove the goal itself
-                _context.SaveChanges();
+                return NotFound();  // If the goal doesn't exist, return a 404 error
             }
 
-            return RedirectToAction(nameof(Index));
+            _context.ProgressTrackingGoals.Remove(progressGoal);  // Remove the goal from the context
+            _context.SaveChanges();  // Save changes to the database
+
+            return RedirectToAction(nameof(Index));  // Redirect back to the list after deletion
         }
+
     }
 }
 
