@@ -20,3 +20,8 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.navbar-nav .nav-item .nav-link.active {
+    background-color: #ADD8E6; /
+    color: #000000; 
+}

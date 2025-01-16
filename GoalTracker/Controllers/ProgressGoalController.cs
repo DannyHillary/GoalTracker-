@@ -18,6 +18,7 @@ namespace GoalTracker.Controllers
         // GET: ProgressGoal
         public IActionResult Index()
         {
+            ViewData["ActivePage"] = "ProgressGoals";
             var progressGoals = _context.ProgressTrackingGoals
                                          .Include(pg => pg.ProgressLogs)  // Include ProgressLogs when fetching goals
                                          .ToList();

@@ -16,6 +16,7 @@ namespace GoalTracker.Controllers
 
         public IActionResult Index()
         {
+            ViewData["ActivePage"] = "HabitTrackingGoals";
             var goals = _context.HabitTrackingGoals.ToList();  // Fetch data from the DB
 
             // Ensure that the list is never null

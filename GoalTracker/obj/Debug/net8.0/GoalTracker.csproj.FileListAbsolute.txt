@@ -164,10 +164,10 @@ C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\De
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.GoalTracker.props
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.GoalTracker.props
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\staticwebassets.pack.json
-C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\GoalTrac.FBD19481.Up2Date
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\GoalTracker.dll
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\refint\GoalTracker.dll
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\GoalTracker.pdb
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\GoalTracker.genruntimeconfig.cache
 C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\ref\GoalTracker.dll
+C:\Users\DPH\Documents\.NET projects for practice\GoalTracker\GoalTracker\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

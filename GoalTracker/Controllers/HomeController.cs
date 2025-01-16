@@ -15,6 +15,7 @@ namespace GoalTracker.Controllers
 
         public IActionResult Index()
         {
+            ViewData["ActivePage"] = "Home";
             return View();
         }
 
