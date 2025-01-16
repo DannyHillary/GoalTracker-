@@ -1,0 +1,26 @@
+﻿@model ProgressTrackingGoal
+
+<h2>Progress Tracking Goal Details</h2>
+
+<div>
+    <strong>Title:</strong> @Model.Title
+</div>
+<div>
+    <strong>Description:</strong> @Model.Description
+</div>
+<div>
+    <strong>Target Value:</strong> @Model.TargetValue
+</div>
+<div>
+    <strong>Current Value:</strong> @Model.CurrentValue
+</div>
+<div>
+    <strong>Status:</strong> @Model.Status
+</div>
+<div>
+    <strong>Goal Type:</strong> @Model.GoalType
+</div>
+
+<a href="@Url.Action("Edit", new { id = Model.Id })" class="btn btn-primary">Edit</a>
+<a href="@Url.Action("Index")" class="btn btn-secondary">Back to List</a>
+

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<HabitTrackingGoal>
+
+<h2>Habit Tracking Goals</h2>
+
+<a href="@Url.Action("Create", "HabitTrackingGoal")" class="btn btn-primary">Create New Habit</a>
+
+@if (!Model.Any())
+{
+    <p>No goals available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Frequency</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var goal in Model)
+            {
+                <tr>
+                    <td>@goal.Title</td>
+                    <td>@goal.Frequency</td>
+                    <td>
+                        <a href="@Url.Action("Edit", "HabitTrackingGoal", new { id = goal.Id })" class="btn btn-warning">Edit</a>
+                        <a href="@Url.Action("Details", "HabitTrackingGoal", new { id = goal.Id })" class="btn btn-info">Details</a>
+                        <a href="@Url.Action("Delete", "HabitTrackingGoal", new { id = goal.Id })" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+

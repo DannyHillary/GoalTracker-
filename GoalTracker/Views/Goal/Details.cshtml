@@ -1,0 +1,32 @@
+﻿@model BaseGoal
+
+<h2>Goal Details</h2>
+
+<div class="form-group">
+    <label>Title</label>
+    <p>@Model.Title</p>
+</div>
+<div class="form-group">
+    <label>Description</label>
+    <p>@Model.Description</p>
+</div>
+<div class="form-group">
+    <label>Start Date</label>
+    <p>@Model.StartDate.ToShortDateString()</p>
+</div>
+<div class="form-group">
+    <label>End Date</label>
+    <p>@Model.EndDate?.ToShortDateString()</p>
+</div>
+<div class="form-group">
+    <label>Goal Type</label>
+    <p>@Model.GoalType</p>
+</div>
+<div class="form-group">
+    <label>Status</label>
+    <p>@Model.Status</p>
+</div>
+
+<a href="@Url.Action("Edit", "Goal", new { id = Model.Id })" class="btn btn-warning">Edit</a>
+<a href="@Url.Action("Index", "Goal")" class="btn btn-secondary">Back to List</a>
+
