@@ -6,8 +6,6 @@ namespace GoalTracker.Models
     {
         public GoalDbContext(DbContextOptions<GoalDbContext> options) : base(options) { }
 
-        public DbSet<TimeTrackingGoal> TimeTrackingGoals { get; set; }
-        public DbSet<TimeSessionLog> TimeSessionLogs { get; set; }
         public DbSet<HabitTrackingGoal> HabitTrackingGoals { get; set; }
         public DbSet<HabitDailyLog> HabitDailyLogs { get; set; }
         public DbSet<ProgressTrackingGoal> ProgressTrackingGoals { get; set; }
@@ -22,11 +20,6 @@ namespace GoalTracker.Models
                 .WithOne(dl => dl.HabitTrackingGoal)
                 .HasForeignKey(dl => dl.HabitTrackingGoalId);
 
-            // TimeTrackingGoal and TimeSessionLog relationship
-            modelBuilder.Entity<TimeTrackingGoal>()
-                .HasMany(ttg => ttg.TimeSessions)
-                .WithOne(ts => ts.TimeTrackingGoal)
-                .HasForeignKey(ts => ts.TimeTrackingGoalId);
 
             // ProgressTrackingGoal and ProgressLog relationship
             modelBuilder.Entity<ProgressTrackingGoal>()
