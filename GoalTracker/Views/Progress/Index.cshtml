@@ -27,6 +27,23 @@
                     <a href="@Url.Action("Details", "ProgressGoal", new { id = goal.Id })" class="btn btn-info">Details</a>
                     <a href="@Url.Action("Delete", "ProgressGoal", new { id = goal.Id })" class="btn btn-danger">Delete</a>
                 </td>
+                <!-- Increment Button -->
+                <td>
+                <form asp-action="Increment" method="post" style="display: inline;">
+                    <input type="hidden" name="id" value="@goal.Id" />
+                    <button type="submit" class="btn btn-success btn-sm">+</button>
+                </form>
+                </td>
+
+                
+                <!-- Decrement Button -->
+                <td>
+                <form asp-action="Decrement" method="post" style="display: inline;">
+                    <input type="hidden" name="id" value="@goal.Id" />
+                    <button type="submit" class="btn btn-danger btn-sm">-</button>
+                </form>
+                </td>
+                
             </tr>
         }
     </tbody>

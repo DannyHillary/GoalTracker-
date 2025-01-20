@@ -153,6 +153,33 @@ namespace GoalTracker.Controllers
             return RedirectToAction(nameof(Index));  // Redirect back to the list after deletion
         }
 
+        // Increment the goal
+        [HttpPost]
+        public IActionResult Increment(int id)
+        {
+            var goal = _context.ProgressTrackingGoals.FirstOrDefault(pg => pg.Id == id);
+            if (goal != null)
+            {
+                goal.CurrentAmount++; // Increment the goal's current amount
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(Index)); // Redirect back to the index view
+        }
+
+        // Decrement the goal
+        [HttpPost]
+        public IActionResult Decrement(int id)
+        {
+            var goal = _context.ProgressTrackingGoals.FirstOrDefault(pg => pg.Id == id);
+            if (goal != null && goal.CurrentAmount > 0)
+            {
+                goal.CurrentAmount--; // Decrement the goal's current amount (ensure it doesn't go below zero)
+                _context.SaveChanges();
+            }
+            return RedirectToAction(nameof(Index)); // Redirect back to the index view
+        }
+
+
     }
 }
 
