@@ -12,7 +12,17 @@ namespace GoalTracker.Models
         public double CurrentAmount { get; set; }  // Current progress made
 
         // Method to calculate the progress percentage
-        public double ProgressPercentage => (CurrentAmount / TargetAmount) * 100;
+        public double ProgressPercentage
+        {
+            get
+            {
+                if (TargetAmount > 0)
+                {
+                    return Math.Round((double)CurrentAmount / TargetAmount * 100, 2);
+                }
+                return 0.00;
+            }
+        }
 
         // Navigation property for related ProgressLog entries
         [ValidateNever]
