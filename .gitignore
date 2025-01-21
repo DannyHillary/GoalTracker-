@@ -1,1 +1,10 @@
 .vs/
+fullcalendar/
+@fullcalendar/
+bin/
+obj/
+*.dll
+*.pdb
+*.exe
+*.log
+*.cache
