@@ -1,6 +1,7 @@
 using System;
 using GoalTracker.Models; 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 
 namespace GoalTracker
@@ -22,7 +23,15 @@ namespace GoalTracker
 
             var app = builder.Build();
 
-            
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+            // Add logging configurations
+            builder.Logging.AddConsole();              // Add console logging
+            builder.Logging.AddDebug();                // Add debug logging for Visual Studio output
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
