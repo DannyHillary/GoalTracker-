@@ -55,7 +55,7 @@ cd GoalTracker
 
 Future Enhancements
 
-Here are some features we plan to add:
+Here are some features I plan to add:
 
 Unit and integration Testing 
 User Authentication: Allow users to create accounts and manage their goals securely.
