@@ -2,16 +2,42 @@
 
 namespace GoalTracker.Models
 {
+    /// <summary>
+    /// Represents the database context for the Goal Tracker application.
+    /// </summary>
     public class GoalDbContext : DbContext
     {
+        /// <summary>
+        /// Initialises a new instance of the <see cref="GoalDbContext"/> class.
+        /// </summary>
+        /// <param name="options">The options to configure the database context.</param>
         public GoalDbContext(DbContextOptions<GoalDbContext> options) : base(options) { }
 
+        /// <summary>
+        /// Gets or sets the HabitTrackingGoals in the database.
+        /// </summary>
         public DbSet<HabitTrackingGoal> HabitTrackingGoals { get; set; }
+
+        /// <summary>
+        /// Gets or sets the HabitDailyLogs in the database.
+        /// </summary>
         public DbSet<HabitDailyLog> HabitDailyLogs { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ProgressTrackingGoals in the database.
+        /// </summary>
         public DbSet<ProgressTrackingGoal> ProgressTrackingGoals { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ProgressLogs in the database.
+        /// </summary>
         public DbSet<ProgressLog> ProgressLogs { get; set; }
 
-        // Create relationships between Entities
+
+        /// <summary>
+        /// Configures relationships between entities using Fluent API.
+        /// </summary>
+        /// <param name="modelBuilder">The model builder used to configure the model.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // HabitTrackingGoal and HabitDailyLog relationship

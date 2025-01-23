@@ -1,20 +1,42 @@
 ﻿namespace GoalTracker.Models
 {
+    /// <summary>
+    /// Represents a log entry for progress made towards a ProgressTrackingGoal.
+    /// </summary>
     public class ProgressLog
     {
-        // Primary key
+        /// <summary>
+        /// Gets or sets the unique identifier for the progress log entry.
+        /// </summary>
         public int Id { get; set; }
 
-        // Foreign key for the related ProgressTrackingGoal
+        /// <summary>
+        /// Gets or sets the ID of the related ProgressTrackingGoal.
+        /// </summary>
+        /// <remarks>
+        /// This foreign key links the progress log entry to a specific progress tracking goal.
+        /// </remarks>
         public int ProgressTrackingGoalId { get; set; }
 
-        // Date when the progress was logged
+        /// <summary>
+        /// Gets or sets the date when the progress was logged.
+        /// </summary>
+        /// <remarks>
+        /// The date represents when progress was recorded for the associated goal.
+        /// </remarks>
         public DateTime DateLogged { get; set; }
 
-        // The value added to the progress goal
+        /// <summary>
+        /// Gets or sets the value added to the progress goal.
+        /// </summary>
+        /// <remarks>
+        /// This represents the amount of progress made on a specific date for the goal.
+        /// </remarks>
         public decimal ValueAdded { get; set; }
 
-        // Navigation property to the related ProgressTrackingGoal
+        /// <summary>
+        /// Navigation property to the related ProgressTrackingGoal.
+        /// </summary>
         public ProgressTrackingGoal ProgressTrackingGoal { get; set; }
     }
 }
