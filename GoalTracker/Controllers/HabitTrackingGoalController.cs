@@ -5,19 +5,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GoalTracker.Controllers
 {
+    /// <summary>
+    /// Manages operations related to habit tracking goals, including CRUD functionality and marking completion.
+    /// </summary>
     public class HabitTrackingGoalController : Controller
     {
         private readonly GoalDbContext _context;
-        
 
 
-        // Constructor to inject DbContext
+
+        /// <summary>
+        /// Initialises a new instance of the HabitTrackingGoalController class.
+        /// </summary>
+        /// <param name="context">The database context for accessing habit tracking goals and related data.</param>
         public HabitTrackingGoalController(GoalDbContext context)
         {
             _context = context;
             
         }
 
+
+        /// <summary>
+        /// Displays the list of all habit tracking goals.
+        /// </summary>
+        /// <returns>The view displaying all habit tracking goals.</returns>
         public IActionResult Index()
         {
             ViewData["ActivePage"] = "HabitTrackingGoals";
@@ -32,13 +43,23 @@ namespace GoalTracker.Controllers
             return View(goals);  // Pass the list (even if it's empty) to the view
         }
 
-        // GET: HabitTrackingGoal/Create
+
+        /// <summary>
+        /// Displays the form to create a new habit tracking goal.
+        /// </summary>
+        /// <returns>The view for creating a new habit tracking goal.</returns>
         public IActionResult Create()
         {
             return View(); // Display the form for creating a new HabitTrackingGoal
         }
 
-        // POST: HabitTrackingGoal/Create
+
+
+        /// <summary>
+        /// Creates a new habit tracking goal in the database.
+        /// </summary>
+        /// <param name="habitTrackingGoal">The habit tracking goal to create.</param>
+        /// <returns>A redirection to the Index view if creation is successful, or the current view if validation fails.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(HabitTrackingGoal habitTrackingGoal)
@@ -64,7 +85,12 @@ namespace GoalTracker.Controllers
         }
 
 
-        // GET: HabitTrackingGoal/Edit/5
+
+        /// <summary>
+        /// Displays the form to edit an existing habit tracking goal.
+        /// </summary>
+        /// <param name="id">The ID of the habit tracking goal to edit.</param>
+        /// <returns>The view for editing an existing habit tracking goal.</returns>
         public IActionResult Edit(int id)
         {
             var goal = _context.HabitTrackingGoals.Find(id);
@@ -75,7 +101,13 @@ namespace GoalTracker.Controllers
             return View(goal); // Display the Edit form with the existing data
         }
 
-        // POST: HabitTrackingGoal/Edit/5
+
+        /// <summary>
+        /// Updates an existing habit tracking goal in the database.
+        /// </summary>
+        /// <param name="id">The ID of the habit tracking goal to edit.</param>
+        /// <param name="habitTrackingGoal">The habit tracking goal with updated data.</param>
+        /// <returns>A redirection to the Index view if update is successful, or the current view if validation fails.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, HabitTrackingGoal habitTrackingGoal)
@@ -113,7 +145,12 @@ namespace GoalTracker.Controllers
             return View(habitTrackingGoal); // Return the current model if validation fails
         }
 
-        // GET: HabitTrackingGoal/Delete/5
+
+        /// <summary>
+        /// Displays the confirmation page for deleting a specific habit tracking goal.
+        /// </summary>
+        /// <param name="id">The ID of the habit tracking goal to delete.</param>
+        /// <returns>The view confirming the deletion of the habit tracking goal.</returns>
         public IActionResult Delete(int id)
         {
             var goal = _context.HabitTrackingGoals.Find(id);
@@ -124,7 +161,12 @@ namespace GoalTracker.Controllers
             return View(goal); // Display the Delete confirmation view
         }
 
-        // POST: HabitTrackingGoal/Delete/5
+
+        /// <summary>
+        /// Deletes a specific habit tracking goal from the database.
+        /// </summary>
+        /// <param name="id">The ID of the habit tracking goal to delete.</param>
+        /// <returns>A redirection to the Index view after successful deletion.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -138,6 +180,12 @@ namespace GoalTracker.Controllers
             return RedirectToAction(nameof(Index)); // Redirect back to Index after deletion
         }
 
+
+        /// <summary>
+        /// Displays the details of a specific habit tracking goal.
+        /// </summary>
+        /// <param name="id">The ID of the habit tracking goal to view.</param>
+        /// <returns>The view displaying the details of the habit tracking goal.</returns>
         public IActionResult Details(int? id)
         {
             if (id == null)
@@ -163,6 +211,11 @@ namespace GoalTracker.Controllers
         }
 
 
+
+        /// <summary>
+        /// Generates daily logs for the habit tracking goal based on its frequency.
+        /// </summary>
+        /// <param name="goal">The habit tracking goal for which to generate logs.</param>
         private void GenerateHabitLogs(HabitTrackingGoal goal)
         {
             // Clear existing logs if the frequency has changed or if there are any previous logs
@@ -208,7 +261,12 @@ namespace GoalTracker.Controllers
         }
 
 
-        // POST: Mark Habit Completion
+        /// <summary>
+        /// Marks a specific habit as completed for a given date.
+        /// </summary>
+        /// <param name="habitTrackingGoalId">The ID of the habit tracking goal.</param>
+        /// <param name="date">The date to mark as completed.</param>
+        /// <returns>A redirection to the Details view for the given habit tracking goal after marking the completion.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult MarkCompleted(int habitTrackingGoalId, DateTime date)

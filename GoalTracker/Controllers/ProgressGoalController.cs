@@ -6,16 +6,28 @@ using System;
 
 namespace GoalTracker.Controllers
 {
+    /// <summary>
+    /// Manages operations related to progress tracking goals, including CRUD functionality.
+    /// </summary>
     public class ProgressGoalController : Controller
     {
         private readonly GoalDbContext _context;
 
+        /// <summary>
+        /// Initialises a new instance of the ProgressGoalController class.
+        /// </summary>
+        /// <param name="context">The database context for accessing the progress tracking goals and related data.</param>
         public ProgressGoalController(GoalDbContext context)
         {
             _context = context;
         }
 
-        // GET: ProgressGoal
+
+
+        /// <summary>
+        /// Displays the list of all progress tracking goals.
+        /// </summary>
+        /// <returns>The view displaying all progress goals with their logs.</returns>
         public IActionResult Index()
         {
             ViewData["ActivePage"] = "ProgressGoals";
@@ -25,13 +37,23 @@ namespace GoalTracker.Controllers
             return View("~/Views/Progress/Index.cshtml", progressGoals);
         }
 
-        // GET: ProgressGoal/Create
+
+        /// <summary>
+        /// Displays the form to create a new progress tracking goal.
+        /// </summary>
+        /// <returns>The view for creating a new progress goal.</returns>
         public IActionResult Create()
         {
             return View("~/Views/Progress/Create.cshtml");
         }
 
-        // POST: ProgressGoal/Create
+
+
+        /// <summary>
+        /// Creates a new progress tracking goal in the database.
+        /// </summary>
+        /// <param name="progressGoal">The progress tracking goal to create.</param>
+        /// <returns>A redirection to the Index view if creation is successful, or the current view if validation fails.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(ProgressTrackingGoal progressGoal)
@@ -45,11 +67,16 @@ namespace GoalTracker.Controllers
             return View(progressGoal);
         }
 
-        // GET: ProgressGoal/Edit/5
+
+        /// <summary>
+        /// Displays the form to edit an existing progress tracking goal.
+        /// </summary>
+        /// <param name="id">The ID of the progress tracking goal to edit.</param>
+        /// <returns>The view for editing an existing progress goal.</returns>
         public IActionResult Edit(int id)
         {
             var progressGoal = _context.ProgressTrackingGoals
-                                       .Include(pg => pg.ProgressLogs)  // Include ProgressLogs if needed
+                                       .Include(pg => pg.ProgressLogs)  // Include ProgressLogs
                                        .FirstOrDefault(pg => pg.Id == id);
 
             if (progressGoal == null)
@@ -61,7 +88,13 @@ namespace GoalTracker.Controllers
         }
 
 
-        // POST: ProgressGoal/Edit/5
+
+        /// <summary>
+        /// Updates an existing progress tracking goal in the database.
+        /// </summary>
+        /// <param name="id">The ID of the progress tracking goal to edit.</param>
+        /// <param name="progressGoal">The progress tracking goal with updated data.</param>
+        /// <returns>A redirection to the Index view if update is successful, or the current view if validation fails.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, ProgressTrackingGoal progressGoal)
@@ -98,7 +131,11 @@ namespace GoalTracker.Controllers
 
 
 
-        // GET: ProgressGoal/Details/5
+        /// <summary>
+        /// Displays the details of a specific progress tracking goal.
+        /// </summary>
+        /// <param name="id">The ID of the progress tracking goal to view.</param>
+        /// <returns>The view displaying the details of the progress goal.</returns>
         public IActionResult Details(int id)
         {
             var progressGoal = _context.ProgressTrackingGoals
@@ -119,7 +156,12 @@ namespace GoalTracker.Controllers
         }
 
 
-        // GET: ProgressGoal/Delete/5
+        /// <summary>
+        /// Displays the confirmation page for deleting a specific progress tracking goal.
+        /// </summary>
+        /// <param name="id">The ID of the progress tracking goal to delete.</param>
+        /// <returns>The view confirming the deletion of the progress goal.</returns>
+
         public IActionResult Delete(int id)
         {
             var progressGoal = _context.ProgressTrackingGoals
@@ -134,7 +176,12 @@ namespace GoalTracker.Controllers
         }
 
 
-        // POST: ProgressGoal/Delete/5
+
+        /// <summary>
+        /// Deletes a specific progress tracking goal from the database.
+        /// </summary>
+        /// <param name="id">The ID of the progress tracking goal to delete.</param>
+        /// <returns>A redirection to the Index view after successful deletion.</returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
@@ -153,7 +200,12 @@ namespace GoalTracker.Controllers
             return RedirectToAction(nameof(Index));  // Redirect back to the list after deletion
         }
 
-        // Increment the goal
+
+        /// <summary>
+        /// Increments the current amount of progress for a specific goal.
+        /// </summary>
+        /// <param name="id">The ID of the progress tracking goal to increment.</param>
+        /// <returns>A redirection to the Index view after the increment.</returns>
         [HttpPost]
         public IActionResult Increment(int id)
         {
@@ -166,7 +218,11 @@ namespace GoalTracker.Controllers
             return RedirectToAction(nameof(Index)); // Redirect back to the index view
         }
 
-        // Decrement the goal
+        /// <summary>
+        /// Decrements the current amount of progress for a specific goal.
+        /// </summary>
+        /// <param name="id">The ID of the progress tracking goal to decrement.</param>
+        /// <returns>A redirection to the Index view after the decrement.</returns>
         [HttpPost]
         public IActionResult Decrement(int id)
         {
