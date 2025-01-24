@@ -8,3 +8,4 @@ obj/
 *.exe
 *.log
 *.cache
+node_modules/
