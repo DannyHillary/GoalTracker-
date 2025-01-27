@@ -1,18 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace GoalTracker.Models
 {
     /// <summary>
     /// Represents the database context for the Goal Tracker application.
     /// </summary>
-    public class GoalDbContext : DbContext
+    public class GoalDbContext : IdentityDbContext<IdentityUser>
     {
         /// <summary>
         /// Initialises a new instance of the <see cref="GoalDbContext"/> class.
         /// </summary>
         /// <param name="options">The options to configure the database context.</param>
-        public GoalDbContext(DbContextOptions<GoalDbContext> options) : base(options) { }
-
+        public GoalDbContext(DbContextOptions<GoalDbContext> options) : base(options) {}
         /// <summary>
         /// Gets or sets the HabitTrackingGoals in the database.
         /// </summary>
