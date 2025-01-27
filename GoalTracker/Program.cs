@@ -1,7 +1,9 @@
 using System;
 using GoalTracker.Models; 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 
 
 namespace GoalTracker
@@ -15,9 +17,14 @@ namespace GoalTracker
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            // Configure the DbContext
+            // Configure the DbContext to use SQL Server
             builder.Services.AddDbContext<GoalDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Configure Identity services
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<GoalDbContext>()
+                .AddDefaultTokenProviders();
 
             builder.Services.AddRazorPages();
 
@@ -30,14 +37,14 @@ namespace GoalTracker
             }
 
             // Add logging configurations
-            builder.Logging.AddConsole();              // Add console logging
-            builder.Logging.AddDebug();                // Add debug logging for Visual Studio output
+            builder.Logging.AddConsole();              
+            builder.Logging.AddDebug();                
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                // The default HSTS value is 30 days.
                 app.UseHsts();
             }
 
