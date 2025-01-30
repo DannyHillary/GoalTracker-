@@ -41,6 +41,8 @@ namespace GoalTracker.Models
         /// <param name="modelBuilder">The model builder used to configure the model.</param>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             // HabitTrackingGoal and HabitDailyLog relationship
             modelBuilder.Entity<HabitTrackingGoal>()
                 .HasMany(h => h.DailyLogs)
