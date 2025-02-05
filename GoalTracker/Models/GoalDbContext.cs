@@ -55,8 +55,25 @@ namespace GoalTracker.Models
                 .HasMany(ptg => ptg.ProgressLogs)
                 .WithOne(pl => pl.ProgressTrackingGoal)
                 .HasForeignKey(pl => pl.ProgressTrackingGoalId);
-        
-    }
+
+            // Defined the precision scale for 'ValueAdded' decimal column in 'ProgressLog'
+            modelBuilder.Entity<ProgressLog>()
+                .Property(p => p.ValueAdded)
+                .HasColumnType("decimal(18,2)");
+
+            // Defined the relationship between User and Goals
+            modelBuilder.Entity<HabitTrackingGoal>()
+                .HasOne(h => h.User)
+                .WithMany()
+                .HasForeignKey(h => h.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ProgressTrackingGoal>()
+            .HasOne(p => p.User)
+            .WithMany()
+            .HasForeignKey(p => p.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
 

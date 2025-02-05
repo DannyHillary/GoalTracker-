@@ -1,6 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace GoalTracker.Models
 
@@ -22,7 +25,12 @@ namespace GoalTracker.Models
         /// Gets or sets the ID of the User who owns this goal.
         /// </summary>
         [ForeignKey("User")]
-        public int UserId { get; set; }
+        public string UserId { get; set; }
+
+
+        // Navigation property
+        [ValidateNever]
+        public IdentityUser User { get; set; }
 
 
         /// <summary>

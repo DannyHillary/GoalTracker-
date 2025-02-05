@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using GoalTracker.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 
 namespace GoalTracker.Controllers
@@ -11,6 +13,7 @@ namespace GoalTracker.Controllers
     public class HabitTrackingGoalController : Controller
     {
         private readonly GoalDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
 
 
@@ -18,10 +21,11 @@ namespace GoalTracker.Controllers
         /// Initialises a new instance of the HabitTrackingGoalController class.
         /// </summary>
         /// <param name="context">The database context for accessing habit tracking goals and related data.</param>
-        public HabitTrackingGoalController(GoalDbContext context)
+        public HabitTrackingGoalController(GoalDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
-            
+            _userManager = userManager;
+
         }
 
 
@@ -31,16 +35,29 @@ namespace GoalTracker.Controllers
         /// <returns>The view displaying all habit tracking goals.</returns>
         public IActionResult Index()
         {
-            ViewData["ActivePage"] = "HabitTrackingGoals";
-            var goals = _context.HabitTrackingGoals.ToList();  // Fetch data from the DB
-
-            // Ensure that the list is never null
-            if (goals == null)
+            // Check if the user is authenticated
+            if (User.Identity.IsAuthenticated)
             {
-                goals = new List<HabitTrackingGoal>();
-            }
+                // Get the logged-in user's ID
+                var userId = _userManager.GetUserId(User);
 
-            return View(goals);  // Pass the list (even if it's empty) to the view
+                // Fetch the goals that belong to the logged-in user
+                var goals = _context.HabitTrackingGoals.Where(g => g.UserId == userId).ToList();
+
+                // If no goals found, display a message
+                if (goals == null || goals.Count == 0)
+                {
+                    ViewData["NoGoalsMessage"] = "You haven't created any goals yet. Start by adding one!";
+                }
+
+                return View(goals);
+            }
+            else
+            {
+                // If the user is not logged in, display a login prompt
+                ViewData["LoginPromptMessage"] = "You need to log in to view your goals.";
+                return View(); // Empty view to show the login message
+            }
         }
 
 
@@ -64,15 +81,20 @@ namespace GoalTracker.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(HabitTrackingGoal habitTrackingGoal)
         {
+
             if (!ModelState.IsValid)
             {
+
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
                 foreach (var error in errors)
                 {
                     Console.WriteLine(error.ErrorMessage);
                 }
                 return View(habitTrackingGoal);
+
+
             }
+
 
             // Call the method to generate habit logs
             GenerateHabitLogs(habitTrackingGoal);
@@ -117,20 +139,41 @@ namespace GoalTracker.Controllers
                 return NotFound(); // Ensure the ID in the route matches the ID in the model
             }
 
+            var userId = _userManager.GetUserId(User); // Get logged-in user's ID
+            var existingGoal = _context.HabitTrackingGoals.FirstOrDefault(g => g.Id == id);
+
+            if (existingGoal == null)
+            {
+                return NotFound(); 
+            }
+
+            if (existingGoal.UserId != userId)
+            {
+                return Forbid(); // Prevent users from editing someone else's goal
+            }
+
+            // Manually update the properties of the existing goal
+            existingGoal.Title = habitTrackingGoal.Title;
+            existingGoal.Description = habitTrackingGoal.Description;
+            existingGoal.StartDate = habitTrackingGoal.StartDate;
+            existingGoal.EndDate = habitTrackingGoal.EndDate;
+            existingGoal.GoalType = habitTrackingGoal.GoalType;
+            existingGoal.Status = habitTrackingGoal.Status;
+
             if (ModelState.IsValid)
             {
                 try
                 {
+             
                     // Call the method to regenerate habit logs
-                    GenerateHabitLogs(habitTrackingGoal);
+                    GenerateHabitLogs(existingGoal);
 
-                    // Update the goal and logs in the database
-                    _context.HabitTrackingGoals.Update(habitTrackingGoal);
-                    _context.SaveChanges(); // Save the updated goal to the database
+                    // Update the goal in the database
+                    _context.SaveChanges(); 
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.HabitTrackingGoals.Any(e => e.Id == habitTrackingGoal.Id))
+                    if (!_context.HabitTrackingGoals.Any(e => e.Id == existingGoal.Id))
                     {
                         return NotFound();
                     }
@@ -139,10 +182,17 @@ namespace GoalTracker.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index)); // Redirect to the Index view after saving
+                return RedirectToAction(nameof(Index)); 
             }
 
-            return View(habitTrackingGoal); // Return the current model if validation fails
+            Console.WriteLine("ModelState is not valid!");
+            var errors = ModelState.Values.SelectMany(v => v.Errors);
+            foreach (var error in errors)
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+
+            return View(habitTrackingGoal); 
         }
 
 

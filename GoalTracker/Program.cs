@@ -21,13 +21,12 @@ namespace GoalTracker
             builder.Services.AddDbContext<GoalDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            // Configure Identity services
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<GoalDbContext>()
-                .AddDefaultTokenProviders();
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<GoalDbContext>();
+
+            
 
             builder.Services.AddRazorPages();
-
+            
             var app = builder.Build();
 
 
@@ -58,6 +57,8 @@ namespace GoalTracker
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapRazorPages();
 
             app.Run();
         }

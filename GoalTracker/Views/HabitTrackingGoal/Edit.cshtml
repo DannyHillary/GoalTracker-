@@ -4,7 +4,7 @@
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
-
+    <input type="hidden" asp-for="UserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
     <div class="form-group">
         <label asp-for="Title"></label>
         <input asp-for="Title" class="form-control" />
