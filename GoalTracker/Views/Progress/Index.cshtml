@@ -2,50 +2,69 @@
 
 <h2>Progress Goals</h2>
 
-<a href="@Url.Action("Create", "ProgressGoal")" class="btn btn-primary">Create New Progress Goal</a>
+<!-- Check if the user is logged in -->
+@if (User.Identity.IsAuthenticated)
+{
+    <!-- If there are no goals, display the "no goals" message and provide a link to create one -->
+    @if (Model == null || !Model.Any())
+    {
+        <p>@ViewData["NoGoalsMessage"]</p>
+        <a href="@Url.Action("Create", "ProgressGoal")" class="btn btn-primary">Create New Progress Goal</a>
+    }
+    else
+    {
+        <!-- Display the table with goals -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Target Amount</th>
+                    <th>Current Amount</th>
+                    <th>Progress</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var goal in Model)
+                {
+                    <tr>
+                        <td>@goal.Title</td>
+                        <td>@goal.TargetAmount</td>
+                        <td>@goal.CurrentAmount</td>
+                        <td>@goal.ProgressPercentage %</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "ProgressGoal", new { id = goal.Id })" class="btn btn-warning">Edit</a>
+                            <a href="@Url.Action("Details", "ProgressGoal", new { id = goal.Id })" class="btn btn-info">Details</a>
+                            <a href="@Url.Action("Delete", "ProgressGoal", new { id = goal.Id })" class="btn btn-danger">Delete</a>
+                        </td>
+                        <!-- Increment Button -->
+                        <td>
+                            <form asp-action="Increment" method="post" style="display: inline;">
+                                <input type="hidden" name="id" value="@goal.Id" />
+                                <button type="submit" class="btn btn-success btn-sm">+</button>
+                            </form>
+                        </td>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Target Amount</th>
-            <th>Current Amount</th>
-            <th>Progress</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var goal in Model)
-        {
-            <tr>
-                <td>@goal.Title</td>
-                <td>@goal.TargetAmount</td>
-                <td>@goal.CurrentAmount</td>
-                <td>@goal.ProgressPercentage %</td>
-                <td>
-                    <a href="@Url.Action("Edit", "ProgressGoal", new { id = goal.Id })" class="btn btn-warning">Edit</a>
-                    <a href="@Url.Action("Details", "ProgressGoal", new { id = goal.Id })" class="btn btn-info">Details</a>
-                    <a href="@Url.Action("Delete", "ProgressGoal", new { id = goal.Id })" class="btn btn-danger">Delete</a>
-                </td>
-                <!-- Increment Button -->
-                <td>
-                <form asp-action="Increment" method="post" style="display: inline;">
-                    <input type="hidden" name="id" value="@goal.Id" />
-                    <button type="submit" class="btn btn-success btn-sm">+</button>
-                </form>
-                </td>
+                        <!-- Decrement Button -->
+                        <td>
+                            <form asp-action="Decrement" method="post" style="display: inline;">
+                                <input type="hidden" name="id" value="@goal.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">-</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+else
+{
+    <!-- If the user is not logged in, display the login prompt -->
+    <p>@ViewData["LoginPromptMessage"]</p>
+    <a href="/Identity/Account/Login" class="btn btn-primary">Log In</a>
+    <a href="/Identity/Account/Register" class="btn btn-secondary">Sign Up</a>
+}
 
-                
-                <!-- Decrement Button -->
-                <td>
-                <form asp-action="Decrement" method="post" style="display: inline;">
-                    <input type="hidden" name="id" value="@goal.Id" />
-                    <button type="submit" class="btn btn-danger btn-sm">-</button>
-                </form>
-                </td>
-                
-            </tr>
-        }
-    </tbody>
-</table>
+
 
