@@ -3,6 +3,7 @@ using GoalTracker.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System;
+using Microsoft.AspNetCore.Identity;
 
 namespace GoalTracker.Controllers
 {
@@ -12,14 +13,16 @@ namespace GoalTracker.Controllers
     public class ProgressGoalController : Controller
     {
         private readonly GoalDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
         /// <summary>
         /// Initialises a new instance of the ProgressGoalController class.
         /// </summary>
         /// <param name="context">The database context for accessing the progress tracking goals and related data.</param>
-        public ProgressGoalController(GoalDbContext context)
+        public ProgressGoalController(GoalDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
 
@@ -60,11 +63,17 @@ namespace GoalTracker.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Get the currently logged-in user's ID
+                var userId = _userManager.GetUserId(User);
+
+                // Assign the UserId to the goal
+                progressGoal.UserId = userId;
+
                 _context.ProgressTrackingGoals.Add(progressGoal);
                 _context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            return View(progressGoal);
+            return View("~/Views/Progress/Create.cshtml");
         }
 
 
@@ -104,22 +113,39 @@ namespace GoalTracker.Controllers
                 return NotFound();  // If the IDs don't match, return a 404 page
             }
 
+            var userId = _userManager.GetUserId(User); // Get logged-in user's ID
+            var existingGoal = _context.ProgressTrackingGoals.AsNoTracking().FirstOrDefault(g => g.Id == id);
+
+            if (existingGoal == null)
+            {
+                return NotFound(); 
+            }
+
+            if (existingGoal.UserId != userId)
+            {
+                return Forbid(); 
+            }
+            
+            // Preserve the UserId
+            progressGoal.UserId = existingGoal.UserId;
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(progressGoal);  // Update the goal in the database
-                    _context.SaveChanges();  // Save the changes
+                    _context.Update(progressGoal);  
+                    _context.SaveChanges();  
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_context.ProgressTrackingGoals.Any(pg => pg.Id == id))
+                    if (!_context.ProgressTrackingGoals.Any(e => e.Id == progressGoal.Id))
                     {
-                        return NotFound();  // If the goal is not found in the database, return a 404 page
+                        return NotFound();
                     }
                     else
                     {
-                        throw;  // Rethrow the exception if another error occurs
+                        throw;
                     }
                 }
 
