@@ -33,12 +33,29 @@ namespace GoalTracker.Controllers
         /// <returns>The view displaying all progress goals with their logs.</returns>
         public IActionResult Index()
         {
-            ViewData["ActivePage"] = "ProgressGoals";
-            var progressGoals = _context.ProgressTrackingGoals
-                                         .Include(pg => pg.ProgressLogs)  // Include ProgressLogs when fetching goals
-                                         .ToList();
-            return View("~/Views/Progress/Index.cshtml", progressGoals);
+            // Check if the user is authenticated
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = _userManager.GetUserId(User);
+
+                // Fetch the goals that belong to the logged-in user
+                var goals = _context.ProgressTrackingGoals.Where(g => g.UserId == userId).ToList();
+
+                // If no goals exist, show a message
+                if (goals == null || goals.Count == 0)
+                {
+                    ViewData["NoGoalsMessage"] = "You haven't created any goals yet. Start by adding one!";
+                }
+
+                // Pass the goals to the view
+                return View("~/Views/Progress/Index.cshtml", goals);
+            }
+            else
+            {
+                return Redirect("~/Identity/Account/Login");
+            }
         }
+
 
 
         /// <summary>
@@ -59,22 +76,30 @@ namespace GoalTracker.Controllers
         /// <returns>A redirection to the Index view if creation is successful, or the current view if validation fails.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(ProgressTrackingGoal progressGoal)
+        public IActionResult Create(ProgressTrackingGoal progressTrackingGoal)
         {
-            if (ModelState.IsValid)
+
+            if (!ModelState.IsValid)
             {
-                // Get the currently logged-in user's ID
-                var userId = _userManager.GetUserId(User);
 
-                // Assign the UserId to the goal
-                progressGoal.UserId = userId;
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
+                return View(progressTrackingGoal);
 
-                _context.ProgressTrackingGoals.Add(progressGoal);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+
             }
-            return View("~/Views/Progress/Create.cshtml");
+
+            // Add the new goal along with its logs to the database
+            _context.ProgressTrackingGoals.Add(progressTrackingGoal);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index)); // Redirect to the Index page after saving
         }
+        
+
 
 
         /// <summary>
