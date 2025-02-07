@@ -2,36 +2,63 @@
 
 <h2>Habit Tracking Goal: @Model.Title</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Status</th>
-            <th>Completed</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var log in Model.DailyLogs)
-        {
-            <tr>
-                <td>@log.Date.ToShortDateString()</td>
-                <td>@(log.IsCompleted ? "Completed" : "Not Completed")</td>
-                <td>
-                    @if (!log.IsCompleted)
-                    {
-                        <form method="post" action="@Url.Action("MarkCompleted", "HabitTrackingGoal")">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="habitTrackingGoalId" value="@Model.Id" />
-                            <input type="hidden" name="date" value="@log.Date.ToString("yyyy-MM-dd")" />
-                            <button type="submit" class="btn btn-success">Mark as Completed</button>
-                        </form>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<p>@Model.Description</p>
 
+@* Group Daily Logs by Year and Month *@
+@{
+    var groupedLogs = Model.DailyLogs
+        .GroupBy(log => new { log.Date.Year, log.Date.Month })
+        .OrderByDescending(g => g.Key.Year)
+        .ThenByDescending(g => g.Key.Month);
+}
+
+@foreach (var group in groupedLogs)
+{
+    var monthName = new DateTime(group.Key.Year, group.Key.Month, 1).ToString("MMMM yyyy");
+
+    <div class="card mb-3">
+        <div class="card-header bg-primary text-white" data-bs-toggle="collapse" data-bs-target="#collapse-@group.Key.Year-@group.Key.Month" style="cursor: pointer;">
+            <h5 class="mb-0">@monthName ▼</h5>
+        </div>
+
+        <div id="collapse-@group.Key.Year-@group.Key.Month" class="collapse">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in group.OrderBy(l => l.Date))
+                    {
+                        <tr>
+                            <td>@log.Date.ToShortDateString()</td>
+                            <td>@(log.IsCompleted ? "✅ Completed" : "❌ Not Completed")</td>
+                            <td>
+                                @if (!log.IsCompleted)
+                                {
+                                    <form method="post" action="@Url.Action("MarkCompleted", "HabitTrackingGoal")" style="display: inline;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="habitTrackingGoalId" value="@Model.Id" />
+                                        <input type="hidden" name="date" value="@log.Date.ToString("yyyy-MM-dd")" />
+                                        <button type="submit" class="btn btn-success btn-sm">Mark as Completed</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <span class="text-success">✔</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
 
 <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+
 
