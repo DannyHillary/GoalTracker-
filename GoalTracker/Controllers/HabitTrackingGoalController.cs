@@ -243,8 +243,6 @@ namespace GoalTracker.Controllers
                 return NotFound(); // Ensure ID is provided
             }
 
-
-
             // Fetch the goal and its associated daily logs from the database
             var habitTrackingGoal = _context.HabitTrackingGoals
                 .Include(g => g.DailyLogs) // Include HabitDailyLogs with the goal
@@ -252,11 +250,19 @@ namespace GoalTracker.Controllers
 
             if (habitTrackingGoal == null)
             {
-                
                 return NotFound(); // If goal is not found, return NotFound page
             }
 
-          
+            // Group logs by Year and Month
+            var groupedLogs = habitTrackingGoal.DailyLogs
+                .GroupBy(log => new { log.Date.Year, log.Date.Month })
+                .OrderBy(g => g.Key.Year)
+                .ThenBy(g => g.Key.Month)
+                .ToList();
+
+            // Pass the grouped logs to the view using ViewBag
+            ViewBag.GroupedLogs = groupedLogs;
+
             return View(habitTrackingGoal); // Pass the goal with logs to the view
         }
 
