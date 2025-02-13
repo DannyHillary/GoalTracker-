@@ -43,7 +43,9 @@ jobs:
     - name: Azure Login
       uses: azure/login@v2
       with:
-        creds: ${{ secrets.MyGoalTracker_SPN }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}        # Use the secret for client ID
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}        # Use the secret for tenant ID
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }} # Use the secret for client secret
     - name: Deploy to Azure WebApp
       uses: azure/webapps-deploy@v2
       with:
